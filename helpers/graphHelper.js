@@ -7,6 +7,9 @@
 const axios = require("axios");
 const { consoleLogger, errorLogger } = require("./consoleLogger");
 
+const dotenv = require("dotenv");
+dotenv.config();
+
 /**
  * Function to get the devices of a specific user 
  * @param {string} userId Target user objectId 
@@ -53,7 +56,7 @@ const addDevices = async (userId, devices, accessToken) => {
         }
 
         try {
-            await axios.default.post("https://graph.microsoft.com/v1.0/groups/ace7b4be-415c-4c1a-bb6f-9d379ff5e79d/members/$ref", body, options);
+            await axios.default.post(`https://graph.microsoft.com/v1.0/groups/${process.env.DEVICES_GROUP}/members/$ref`, body, options);
             consoleLogger(`Device ${device.id} for user ${userId} added successfully`)
         } catch (error) {
             console.log(error)
@@ -81,7 +84,7 @@ const removeDevices = async (userId, devices, accessToken) => {
 
     devices.forEach(async (device) => {
         try {
-            await axios.default.delete(`https://graph.microsoft.com/v1.0/groups/ace7b4be-415c-4c1a-bb6f-9d379ff5e79d/members/${device.id}/$ref`, options);
+            await axios.default.delete(`https://graph.microsoft.com/v1.0/groups/${process.env.DEVICES_GROUP}/members/${device.id}/$ref`, options);
             consoleLogger(`Device ${device.id} from user ${userId} removed successfully`)
         } catch (error) {
             console.log(error)
